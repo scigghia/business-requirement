@@ -20,7 +20,7 @@ class CustomerPortal(CustomerPortal):
             br_model = request.env["business.requirement"]
             br_count = (
                 br_model.search_count(self._prepare_br_base_domain())
-                if br_model.check_access_rights("read", raise_exception=False)
+                if br_model.check_access("read")
                 else 0
             )
             values["business_requirement_count"] = br_count
@@ -62,7 +62,7 @@ class CustomerPortal(CustomerPortal):
         values = self._prepare_portal_layout_values()
         BRObj = request.env["business.requirement"]
         # Avoid error if the user does not have access.
-        if not BRObj.check_access_rights("read", raise_exception=False):
+        if not BRObj.check_access("read"):
             return request.redirect("/my")
 
         searchbar_sortings = {

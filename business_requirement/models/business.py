@@ -13,41 +13,26 @@ class BusinessRequirement(models.Model):
     _order = "name desc"
 
     sequence = fields.Char(readonly=True, copy=False, index=True)
-    name = fields.Char(
-        readonly=True,
-        copy=False,
-        states={"draft": [("readonly", False)]},
-    )
-    description = fields.Char(
-        required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
-    )
-    business_requirement = fields.Html(
-        string="Customer Story", readonly=True, states={"draft": [("readonly", False)]}
-    )
+    name = fields.Char(readonly=False, copy=False, default="/")
+    description = fields.Char(required=True, readonly=False)
+    business_requirement = fields.Html(string="Customer Story", readonly=False)
     scenario = fields.Html(
-        readonly=True,
-        states={"draft": [("readonly", False)], "confirmed": [("readonly", False)]},
+        readonly=False,
     )
     gap = fields.Html(
-        readonly=True,
-        states={"draft": [("readonly", False)], "confirmed": [("readonly", False)]},
+        readonly=False,
     )
     test_case = fields.Html(
-        readonly=True,
-        states={"draft": [("readonly", False)], "confirmed": [("readonly", False)]},
+        readonly=False,
     )
     terms_and_conditions = fields.Html(
-        readonly=True,
-        states={"draft": [("readonly", False)], "confirmed": [("readonly", False)]},
+        readonly=False,
     )
     category_ids = fields.Many2many(
         comodel_name="business.requirement.category",
         string="Categories",
         relation="business_requirement_category_rel",
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly=False,
     )
     state = fields.Selection(
         selection=[
@@ -62,18 +47,14 @@ class BusinessRequirement(models.Model):
         default="draft",
         copy=False,
         readonly=False,
-        states={"draft": [("readonly", False)]},
         tracking=True,
     )
-    change_request = fields.Boolean(
-        string="Change Request?", readonly=True, states={"draft": [("readonly", False)]}
-    )
+    change_request = fields.Boolean(string="Change Request?", readonly=False)
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Stakeholder",
         copy=False,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly=False,
     )
     priority = fields.Selection(
         selection=[("0", "Low"), ("1", "Normal"), ("2", "High")],
@@ -84,9 +65,8 @@ class BusinessRequirement(models.Model):
         comodel_name="res.users",
         string="Requested by",
         required=True,
-        readonly=True,
+        readonly=False,
         default=lambda self: self.env.user,
-        states={"draft": [("readonly", False)], "confirmed": [("readonly", False)]},
     )
     confirmation_date = fields.Datetime(copy=False, readonly=True)
     confirmed_user_id = fields.Many2one(
@@ -96,16 +76,14 @@ class BusinessRequirement(models.Model):
         comodel_name="res.users",
         string="Responsible",
         copy=False,
-        readonly=True,
+        readonly=False,
         default=lambda self: self.env.user,
-        states={"draft": [("readonly", False)], "confirmed": [("readonly", False)]},
     )
     reviewer_ids = fields.Many2many(
         comodel_name="res.users",
         string="Reviewers",
         copy=False,
-        readonly=True,
-        states={"draft": [("readonly", False)], "confirmed": [("readonly", False)]},
+        readonly=False,
     )
     approval_date = fields.Datetime(copy=False, readonly=True)
     approved_id = fields.Many2one(
@@ -115,8 +93,7 @@ class BusinessRequirement(models.Model):
         comodel_name="res.company",
         string="Company",
         required=True,
-        readonly=True,
-        states={"draft": [("readonly", False)]},
+        readonly=False,
         default=lambda self: self.env.company,
     )
     to_be_reviewed = fields.Boolean()
@@ -131,8 +108,7 @@ class BusinessRequirement(models.Model):
     )
     origin = fields.Char(
         string="Source",
-        readonly=True,
-        states={"draft": [("readonly", False)], "confirmed": [("readonly", True)]},
+        readonly=False,
     )
     portal_published = fields.Boolean("In Portal", default=False)
     user_id = fields.Many2one(
@@ -234,7 +210,6 @@ class BusinessRequirement(models.Model):
         channel_ids=None,
         attachments=None,
         attachment_ids=None,
-        add_sign=True,
         record_name=False,
         **kwargs,
     ):
@@ -260,7 +235,6 @@ class BusinessRequirement(models.Model):
             partner_ids=partner_ids,
             attachments=attachments,
             attachment_ids=attachment_ids,
-            add_sign=add_sign,
             record_name=record_name,
             **kwargs,
         )
@@ -328,7 +302,7 @@ class BusinessRequirement(models.Model):
     def _compute_access_url(self):
         super()._compute_access_url()
         for br in self:
-            br.access_url = "/my/business_requirement/%s" % br.id
+            br.access_url = f"/my/business_requirement/{br.id}"
         return
 
     def portal_publish_button(self):

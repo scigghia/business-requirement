@@ -7,7 +7,8 @@
         and test cases) for your customers",
     "version": "18.0.1.0.0",
     "website": "https://github.com/OCA/business-requirement",
-    "author": "Apulia Software, Elico Corp, Tecnativa, Odoo Community Association (OCA)",
+    "author": "Apulia Software, Elico Corp,\
+        Tecnativa, Odoo Community Association (OCA)",
     "depends": ["product", "portal"],
     "data": [
         "data/business_data.xml",

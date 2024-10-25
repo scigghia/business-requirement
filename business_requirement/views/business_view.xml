@@ -44,16 +44,36 @@
                         />
                     </div>
                     <h1>
-                        <field name="name" class="oe_inline" readonly="1" /> -
-                        <field name="description" default_focus="1" />
+                        <field
+                        name="name"
+                        class="oe_inline"
+                        readonly="state not in ['draft']"
+                    /> -
+                        <field
+                        name="description"
+                        default_focus="1"
+                        readonly="state not in ['draft']"
+                    />
                     </h1>
                     <group col="4">
-                        <field name="responsible_user_id" required="1" />
-                        <field name="partner_id" />
-                        <field name="origin" />
-                        <field name="category_ids" widget="many2many_tags" />
+                        <field
+                            name="responsible_user_id"
+                            required="1"
+                            readonly="state not in ['draft', 'confirmed']"
+                        />
+                        <field name="partner_id" readonly="state not in ['draft']" />
+                        <field name="origin" readonly="state not in ['draft']" />
+                        <field
+                            name="category_ids"
+                            widget="many2many_tags"
+                            readonly="state not in ['draft']"
+                        />
                         <field name="to_be_reviewed" />
-                        <field name="reviewer_ids" widget="many2many_tags" />
+                        <field
+                            name="reviewer_ids"
+                            widget="many2many_tags"
+                            readonly="state not in ['draft', 'confirmed']"
+                        />
                         <field
                             name="priority"
                             groups="base.group_user"
@@ -67,22 +87,39 @@
                                     name="business_requirement"
                                     nolabel="1"
                                     colspan="2"
+                                    readonly="state not in ['draft']"
                                 />
                             </group>
                             <group string="Scenario">
-                                <field name="scenario" nolabel="1" colspan="2" />
+                                <field
+                                    name="scenario"
+                                    nolabel="1"
+                                    colspan="2"
+                                    readonly="state not in ['draft', 'confirmed']"
+                                />
                             </group>
                             <group string="Gap">
-                                <field name="gap" nolabel="1" colspan="2" />
+                                <field
+                                    name="gap"
+                                    nolabel="1"
+                                    colspan="2"
+                                    readonly="state not in ['draft', 'confirmed']"
+                                />
                             </group>
                             <group string="Test Case">
-                                <field name="test_case" nolabel="1" colspan="2" />
+                                <field
+                                    name="test_case"
+                                    nolabel="1"
+                                    colspan="2"
+                                    readonly="state not in ['draft', 'confirmed']"
+                                />
                             </group>
                             <group string="Terms and Conditions">
                                 <field
                                     name="terms_and_conditions"
                                     nolabel="1"
                                     colspan="2"
+                                    readonly="state not in ['draft', 'confirmed']"
                                 />
                             </group>
                         </page>
@@ -104,17 +141,24 @@
                         </page>
                         <page string="Other" name="other">
                             <group col="4">
-                                <field name="requested_user_id" />
-                                <field name="change_request" />
+                                <field
+                                    name="requested_user_id"
+                                    readonly="state not in ['draft', 'confirmed']"
+                                />
+                                <field
+                                    name="change_request"
+                                    readonly="state not in ['draft']"
+                                />
                                 <field
                                     name="company_id"
                                     groups="base.group_multi_company"
+                                    readonly="state not in ['draft']"
                                 />
                             </group>
                         </page>
                     </notebook>
                 </sheet>
-		<chatter/>
+                <chatter />
             </form>
         </field>
     </record>
@@ -287,8 +331,7 @@
         <field name="name">Business requirement</field>
         <field name="model">business.requirement</field>
         <field name="arch" type="xml">
-            <pivot string="Business Requirement">
-            </pivot>
+            <pivot string="Business Requirement" />
         </field>
     </record>
     <record model="ir.actions.act_window" id="action_business_requirement_tree">

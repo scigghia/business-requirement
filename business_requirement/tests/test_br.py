@@ -4,12 +4,10 @@ from odoo import _
 from odoo.tests import common
 
 
-class BusinessRequirementTestBase(common.SavepointCase):
+class BusinessRequirementTestBase(common.TransactionCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(self):
         super().setUpClass()
-        # This is for reducing the diff coming from TransactionCase
-        self = cls
         # Configure.
         self.BR = self.env["business.requirement"]
         self.br = self.BR.create({"description": "test"})
@@ -18,12 +16,11 @@ class BusinessRequirementTestBase(common.SavepointCase):
 class BusinessRequirementTest(BusinessRequirementTestBase):
     def test_message_post(self):
         self.message = self.br.with_context(
-            **{"default_model": "business.requirement", "default_res_id": self.br.id}
+            default_model="business.requirement", default_res_id=self.br.id
         ).message_post(
             body=_("Test Body"),
             message_type="notification",
             subtype_id=self.env.ref("mail.mt_note").id,
-            **{},
         )
         self.assertEqual(self.message.subject, f"Re: {self.br.name}-test")
 
